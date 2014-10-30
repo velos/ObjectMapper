@@ -101,7 +101,18 @@ class ObjectMapperTests: XCTestCase {
 //        XCTAssert(user.birthday.compare(parsedUser.birthday) == .OrderedSame, "Birthday should be the same")
         
     }
+    
+    func testNestedObjects() {
+        var jsonString = "{ \"name\" : \"Alice\", \"bar\" : { \"name\" : \"Bob\" } }"
+        
+        let foo = Mapper().map(jsonString, to: Foo.self)
+
+        XCTAssert(foo.name == "Alice", "foo should not be nil")
+        XCTAssert(foo.bar!.name == "Bob", "foo's bar should not be nil")
+    }
 }
+
+
 
 class User: MapperProtocol {
     
@@ -151,5 +162,23 @@ class User: MapperProtocol {
     
     var description : String {
         return "username: \(username) \nid:\(identifier) \nage: \(age) \nphotoCount: \(photoCount) \ndrinker: \(drinker) \nsmoker: \(smoker) \narr: \(arr) \narrOptional: \(arrOptional) \ndict: \(dict) \ndictOptional: \(dictOptional) \nfriend: \(friend)\nfriends: \(friends)\nbirthday: \(birthday)\nbirthdayOpt: \(birthdayOpt)\nweight: \(weight)"
+    }
+}
+
+final class Foo: MapperProtocol {
+    var name: String?
+    var bar: Bar?
+    
+    class func map(mapper: Mapper, object: Foo) {
+        object.name <= mapper["name"]
+        object.bar <= mapper["bar"]
+    }
+}
+
+final class Bar: MapperProtocol {
+    var name: String = ""
+    
+    class func map(mapper: Mapper, object: Bar) {
+        object.name <= mapper["name"]
     }
 }

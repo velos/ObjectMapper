@@ -57,8 +57,8 @@ class ObjectMapperTests: XCTestCase {
         let userJSONString = "{\"username\":\"\(username)\",\"identifier\":\"\(identifier)\",\"photoCount\":\(photoCount),\"age\":\(age),\"drinker\":\(drinker),\"smoker\":\(smoker), \"arr\":[ \"bla\", true, 42 ], \"dict\":{ \"key1\" : \"value1\", \"key2\" : false, \"key3\" : 142 }, \"arrOpt\":[ \"bla\", true, 42 ], \"dictOpt\":{ \"key1\" : \"value1\", \"key2\" : false, \"key3\" : 142 }, \"birthday\": 1398956159, \"birthdayOpt\": 1398956159, \"weight\": \(weight), \"float\": \(float), \"friend\": \(subUserJSON), \"friendDictionary\":{ \"bestFriend\": \(subUserJSON)}}"
         
         let mapper = Mapper()
-        let user = mapper.map(userJSONString, to: User.self)
-        
+        let user: User = mapper.map(userJSONString, to: User.self)!
+
         XCTAssertEqual(username, user.username, "Username should be the same")
         XCTAssertEqual(identifier, user.identifier!, "Identifier should be the same")
         XCTAssertEqual(photoCount, user.photoCount, "PhotoCount should be the same")
@@ -88,7 +88,7 @@ class ObjectMapperTests: XCTestCase {
         
         let json = Mapper().toJSONString(user, prettyPrint: true)
         println(json)
-        var parsedUser = Mapper().map(json, to: User.self)
+        var parsedUser: User = Mapper().map(json, to: User.self)!
         
         XCTAssertEqual(user.username, parsedUser.username, "Username should be the same")
         XCTAssertEqual(user.identifier!, parsedUser.identifier!, "Identifier should be the same")
@@ -104,7 +104,7 @@ class ObjectMapperTests: XCTestCase {
     
     func testUnknownPropertiesIgnored() {
         let userJSONString = "{\"username\":\"bob\",\"identifier\":\"bob1987\", \"foo\" : \"bar\", \"fooArr\" : [ 1, 2, 3], \"fooObj\" : { \"baz\" : \"qux\" } }"
-        let user = Mapper().map(userJSONString, to: User.self)
+        let user: AnyObject? = Mapper().map(userJSONString, to: User.self)!
         
         XCTAssert(user != nil, "User should not be nil")
     }
@@ -112,7 +112,7 @@ class ObjectMapperTests: XCTestCase {
     func testInvalidJsonResultsInNilObject() {
         let userJSONString = "{\"username\":\"bob\",\"identifier\":\"bob1987\"" // missing ending brace
 
-        let user = Mapper().map(userJSONString, to: User.self)
+        let user: User? = Mapper().map(userJSONString, to: User.self)
         
         XCTAssert(user == nil, "User should be nil due to invalid JSON")
     }

@@ -60,7 +60,7 @@ public class Mapper {
     }
 
     // map a JSON string to an object of type <N: MapperProtocol>
-    public func map<N: MapperProtocol>(JSONString: String, to type: N.Type) -> N! {
+    public func map<N: MapperProtocol>(JSONString: String, to type: N.Type) -> N? {
         if let mappedObjects: [N] = self.map(JSONString, to: type) {
             if let mappedObject = mappedObjects.first {
                 return mappedObject
@@ -70,7 +70,7 @@ public class Mapper {
     }
 
     // map a JSON string to an array of objects of type <N: MapperProtocol>
-    public func map<N: MapperProtocol>(JSONString: String, to type: N.Type) -> [N]! {
+    public func map<N: MapperProtocol>(JSONString: String, to type: N.Type) -> [N]? {
         var parsedJSON = parseJSONString(JSONString)
         if let unmappedObjects = parsedJSON {
             var mappedObjects = [N]()
